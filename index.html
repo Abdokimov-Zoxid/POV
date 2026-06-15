@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>POV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #f0ece4;
+      --muted: #8a8070;
+      --card-bg: rgba(255,255,255,0.04);
+      --card-border: rgba(255,255,255,0.09);
+      --accent: #c9a96e;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Outfit', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #0d0c0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+      position: relative;
+    }
+
+    #grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+    }
+
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .blob-1 {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, #3b2a1a 0%, transparent 70%);
+      top: -100px; left: -100px;
+      animation: drift1 12s ease-in-out infinite alternate;
+    }
+
+    .blob-2 {
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, #1a1f2e 0%, transparent 70%);
+      bottom: -80px; right: -80px;
+      animation: drift2 15s ease-in-out infinite alternate;
+    }
+
+    .blob-3 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, #1e2418 0%, transparent 70%);
+      top: 40%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: drift3 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift1 { to { transform: translate(40px, 30px); } }
+    @keyframes drift2 { to { transform: translate(-30px, -40px); } }
+    @keyframes drift3 { to { transform: translate(-50%,-50%) scale(1.15); } }
+
+    .grid-lines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black, transparent);
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 370px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(22px);
+      animation: rise 0.8s cubic-bezier(0.22,1,0.36,1) 0.15s forwards;
+    }
+
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .avatar-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .avatar-ring {
+      position: relative;
+      width: 92px; height: 92px;
+    }
+
+    .avatar-ring svg.spin-ring {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      animation: spin 10s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .avatar {
+      position: absolute;
+      inset: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2a2218 0%, #1a1510 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    .name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-align: center;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .tagline {
+      font-size: 0.68rem;
+      font-weight: 300;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .accent-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .accent-line span {
+      display: block;
+      height: 1px;
+      width: 40px;
+      background: linear-gradient(90deg, transparent, var(--accent));
+    }
+
+    .accent-line span:last-child {
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .accent-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1.1rem;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      text-decoration: none;
+      color: var(--ink);
+      transition: border-color 0.25s, background 0.25s, transform 0.2s;
+      opacity: 0;
+      transform: translateY(12px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .link:hover::before { opacity: 1; }
+    .link:hover {
+      border-color: rgba(201,169,110,0.35);
+      background: rgba(255,255,255,0.07);
+      transform: translateY(-2px);
+    }
+
+    .link:active { transform: translateY(0); }
+
+    .link:nth-child(1) { animation: rise 0.55s cubic-bezier(0.22,1,0.36,1) 0.5s forwards; }
+    .link:nth-child(2) { animation: rise 0.55s cubic-bezier(0.22,1,0.36,1) 0.63s forwards; }
+    .link:nth-child(3) { animation: rise 0.55s cubic-bezier(0.22,1,0.36,1) 0.76s forwards; }
+
+    .icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .icon svg { width: 18px; height: 18px; }
+    .icon-tg { background: rgba(42,171,238,0.12); }
+    .icon-ig { background: rgba(225,48,108,0.12); }
+    .icon-yt { background: rgba(255,0,0,0.12); }
+
+    .link-text { display: flex; flex-direction: column; gap: 2px; }
+    .link-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 300; }
+    .link-handle { font-size: 0.88rem; font-weight: 400; color: var(--ink); }
+
+    .arrow {
+      margin-left: auto;
+      color: rgba(255,255,255,0.2);
+      font-size: 1.1rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .link:hover .arrow {
+      color: var(--accent);
+      transform: translateX(3px);
+    }
+
+    .footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.1);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="grain"></canvas>
+  <div class="grid-lines"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="card">
+    <div class="avatar-wrap">
+      <div class="avatar-ring">
+        <svg class="spin-ring" viewBox="0 0 92 92" fill="none">
+          <circle cx="46" cy="46" r="42" stroke="url(#ringGrad)" stroke-width="1" stroke-dasharray="6 5"/>
+          <defs>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="92" y2="92" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#c9a96e" stop-opacity="0.8"/>
+              <stop offset="0.5" stop-color="#c9a96e" stop-opacity="0.1"/>
+              <stop offset="1" stop-color="#c9a96e" stop-opacity="0.8"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="avatar">P</div>
+      </div>
+    </div>
+
+    <h1 class="name">POV</h1>
+    <p class="tagline">Content Creator</p>
+
+    <div class="accent-line">
+      <span></span>
+      <div class="accent-dot"></div>
+      <span></span>
+    </div>
+
+    <div class="links">
+
+      <a href="https://t.me/zachemuya" class="link" target="_blank">
+        <div class="icon icon-tg">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M21.8 2.3L1.4 10.1c-1.3.5-1.3 1.3-.2 1.6l5.2 1.6 2 6.3c.3.8.5 1.1 1.1 1.1.5 0 .7-.2 1-.5l2.5-2.4 5.2 3.8c.9.5 1.6.2 1.9-.9l3.4-16c.4-1.5-.6-2.2-1.7-1.7z" fill="#2AABEE"/>
+          </svg>
+        </div>
+        <div class="link-text">
+          <span class="link-label">Telegram</span>
+          <span class="link-handle">@zachemuya</span>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+
+      <a href="https://instagram.com/abdokimovv" class="link" target="_blank">
+        <div class="icon icon-ig">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="2" width="20" height="20" rx="5.5" stroke="url(#ig)" stroke-width="2"/>
+            <circle cx="12" cy="12" r="4" stroke="url(#ig2)" stroke-width="2"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="#E1306C"/>
+            <defs>
+              <linearGradient id="ig" x1="2" y1="22" x2="22" y2="2">
+                <stop stop-color="#f9ce34"/><stop offset=".5" stop-color="#ee2a7b"/><stop offset="1" stop-color="#6228d7"/>
+              </linearGradient>
+              <linearGradient id="ig2" x1="8" y1="16" x2="16" y2="8">
+                <stop stop-color="#f9ce34"/><stop offset=".5" stop-color="#ee2a7b"/><stop offset="1" stop-color="#6228d7"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="link-text">
+          <span class="link-label">Instagram</span>
+          <span class="link-handle">@abdokimovv</span>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+
+      <a href="https://www.youtube.com/@ruzopubg" class="link" target="_blank">
+        <div class="icon icon-yt">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M22.5 6.8s-.2-1.6-.9-2.3c-.9-1-1.9-1-2.3-1C16.5 3.3 12 3.3 12 3.3s-4.5 0-7.3.2c-.4 0-1.4.1-2.3 1-.7.7-.9 2.3-.9 2.3S1.3 8.6 1.3 10.5v1.8c0 1.8.2 3.7.2 3.7s.2 1.6.9 2.3c.9 1 2 .9 2.6 1C7 19.6 12 19.7 12 19.7s4.5 0 7.3-.3c.4 0 1.4-.1 2.3-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.7v-1.8c0-1.9-.2-3.8-.2-3.8zM9.7 14.7V8.7l6.2 3-6.2 3z" fill="#FF0000"/>
+          </svg>
+        </div>
+        <div class="link-text">
+          <span class="link-label">YouTube</span>
+          <span class="link-handle">@ruzopubg</span>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+
+    </div>
+
+    <p class="footer">POV · 2025</p>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('grain');
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function drawGrain() {
+      const w = canvas.width, h = canvas.height;
+      const imageData = ctx.createImageData(w, h);
+      const data = imageData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const v = Math.random() * 255 | 0;
+        data[i] = data[i+1] = data[i+2] = v;
+        data[i+3] = 18;
+      }
+      ctx.putImageData(imageData, 0, 0);
+      requestAnimationFrame(drawGrain);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    drawGrain();
+  </script>
+</body>
+</html>
